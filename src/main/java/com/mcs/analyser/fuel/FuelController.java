@@ -1,12 +1,14 @@
 package com.mcs.analyser.fuel;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("/fuel")
 public class FuelController {
     private final FuelService fuelService;
 
@@ -15,15 +17,27 @@ public class FuelController {
         this.fuelService = fuelService;
     }
 
-    @GetMapping("/Get")
-    public ArrayList<FuelDataPoint> getFuelDataPoints(){
-        //TODO
-        return new ArrayList<>();
+    @GetMapping("/get-by-system-id")
+    public List<FuelDataPoint> getFuelDataPoints(@RequestParam(name = "mcssystemid") int mcsSystemID){
+        return fuelService.getFuelDataPoints(mcsSystemID);
     }
 
-    @PostMapping("/Post")
-    public void postFuelDataPoint(@RequestParam int fuelCount){
-        FuelDataPoint testPoint = new FuelDataPoint(fuelCount, 2, LocalDateTime.now(), true);
-        fuelService.AddFuelDataPoint(testPoint);
+    @GetMapping("/get-by-system-id-between")
+    public List<FuelDataPoint> getFuelDataPoints(
+            @RequestParam(name = "mcssystemid") int mcsSystemID,
+            @RequestParam(name = "start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateStart,
+            @RequestParam(name = "end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateEnd
+            ){
+        return fuelService.getFuelDataPointsBetween(
+                mcsSystemID,
+                dateStart,
+                dateEnd
+        );
+    }
+
+    @PostMapping("/post")
+    public void postFuelDataPoint(@RequestBody FuelDataPoint fuelDataPoint){
+        System.out.println("Received FDP");
+        fuelService.saveFuelDataPoint(fuelDataPoint);
     }
 }

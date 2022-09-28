@@ -1,60 +1,37 @@
 package com.mcs.analyser.fuel;
 
+
+import com.mcs.analyser.common.DataPoint;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.GenerationType.SEQUENCE;
-
-
 @Entity(name = "fuel_data_point")
-@Table
-public class FuelDataPoint {
-    @Id
-    @SequenceGenerator(
-            name = "fuel_data_point_sequence",
-            sequenceName = "fuel_data_point_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator =  "fuel_data_point_sequence"
-    )
+@SequenceGenerator(
+        name = "id_generator",
+        sequenceName = "fuel_data_point_sequence",
+        allocationSize = 1
+)
+public class FuelDataPoint extends DataPoint {
     @Column(
-            name="id",
-            updatable = false
-    )
-    private Long Id;
-
-    @Column(
-            name="fuel_count",
+            name="fuel_used",
             nullable = false
     )
-    private int FuelCount;
+    private Integer fuelUsed;
 
     @Column(
-            name="mcs_system_id",
+            name="turtles_in_system",
             nullable = false
     )
-    private int MCSSystemID;
-
-    @Column(
-            name="time_received",
-            nullable = false
-    )
-    private LocalDateTime TimeReceived;
-
-    @Column(
-            name="sent_before_round",
-            nullable = false
-    )
-    private Boolean SentBeforeRound;
+    private Integer turtlesInSystem;
 
     protected FuelDataPoint() {}
 
-    protected FuelDataPoint(int fuelCount, int MCSSystemID, LocalDateTime timeReceived, boolean sentBeforeRound) {
-        FuelCount = fuelCount;
-        this.MCSSystemID = MCSSystemID;
-        TimeReceived = timeReceived;
-        SentBeforeRound = sentBeforeRound;
+    public Integer getFuelUsed() {
+        return fuelUsed;
+    }
+
+    public Integer getTurtlesInSystem() {
+        return turtlesInSystem;
     }
 }
