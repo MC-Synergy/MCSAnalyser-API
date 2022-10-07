@@ -3,8 +3,6 @@ package com.mcs.analyser.common;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.GenerationType.SEQUENCE;
-
 @MappedSuperclass
 public class DataPoint {
     @Id

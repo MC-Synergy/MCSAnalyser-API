@@ -3,7 +3,7 @@ package com.mcs.analyser.production;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProductionService {
@@ -14,8 +14,14 @@ public class ProductionService {
         this.productionRepository = productionRepository;
     }
 
-    public List<ProductionDataPoint> getProductionDataPoints(Integer mcsSystemID){
-        return productionRepository.findByMcsSystemID(mcsSystemID);
+    public Map<String, List<ProductionDataPoint>> getProductionDataPoints(Integer mcsSystemID){
+        List<ProductionDataPoint> productionDataPoints = productionRepository.findByMcsSystemID(mcsSystemID);
+
+        Map<String, List<ProductionDataPoint>> producedItems = new HashMap<String, List<ProductionDataPoint>>();
+        for (ProductionDataPoint pdp : productionDataPoints) {
+            producedItems.computeIfAbsent(pdp.getItemName(), k -> new ArrayList<>()).add(pdp);
+        }
+        return producedItems;
     }
 
     public void saveProductionDataPoint(ProductionDataPoint productionDataPoint){

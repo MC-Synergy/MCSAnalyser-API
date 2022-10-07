@@ -4,7 +4,6 @@ package com.mcs.analyser.fuel;
 import com.mcs.analyser.common.DataPoint;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity(name = "fuel_data_point")
 @SequenceGenerator(
