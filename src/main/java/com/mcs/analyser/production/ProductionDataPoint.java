@@ -19,12 +19,6 @@ public class ProductionDataPoint extends DataPoint {
     private Integer amountProduced;
 
     @Column(
-            name = "timespan_as_seconds",
-            nullable = false
-    )
-    private Integer timeSpanAsSeconds;
-
-    @Column(
             name = "item_name",
             nullable = false
     )
@@ -36,8 +30,8 @@ public class ProductionDataPoint extends DataPoint {
         return amountProduced;
     }
 
-    public Integer getTimeSpanAsSeconds() {
-        return timeSpanAsSeconds;
+    public void setAmountProduced(Integer amountProduced) {
+        this.amountProduced = amountProduced;
     }
 
     public String getItemName() {
