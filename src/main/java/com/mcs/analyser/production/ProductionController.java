@@ -20,16 +20,33 @@ public class ProductionController {
 
     @GetMapping("/hello")
     public String sayHello(){
-        return "Hello!";
+        return "Hello from burger king!";
     }
-    @GetMapping("/get-by-system-id")
-    public Map<String, List<ProductionDataPoint>> getProductionDataPoints(@RequestParam(name = "mcssystemid") int mcsSystemID){
-        return productionService.getProductionDataPoints(mcsSystemID);
+    @GetMapping(
+            value = "/get-by-system-id",
+            params = {"mcssystemid", "accumulated"}
+    )
+    public Map<String, List<ProductionDataPoint>> getProductionDataPoints(
+            @RequestParam(name = "mcssystemid") int mcsSystemID,
+            @RequestParam(name = "accumulated") boolean accumulated
+    ){
+        return productionService.getProductionDataPoints(mcsSystemID, accumulated);
+    }
+
+    @GetMapping(
+            value = "/get-by-system-id",
+            params = {"mcssystemid", "accumulated", "datatimespan"}
+    )
+    public Map<String, List<ProductionDataPoint>> getProductionDataPointsWithinTimeSpan(
+            @RequestParam(name = "mcssystemid") int mcsSystemID,
+            @RequestParam(name = "accumulated") boolean accumulated,
+            @RequestParam(name = "datatimespan") int timeSpanInMinutes
+    ){
+        return productionService.getProductionDataPoints(mcsSystemID, accumulated, timeSpanInMinutes);
     }
 
     @PostMapping("/post")
     public void postProductionDataPoint(@RequestBody ArrayList<ProductionDataPoint> productionDataPoints){
-        System.out.println("received!!");
         for (ProductionDataPoint pdp : productionDataPoints) {
             productionService.saveProductionDataPoint(pdp);
         }
