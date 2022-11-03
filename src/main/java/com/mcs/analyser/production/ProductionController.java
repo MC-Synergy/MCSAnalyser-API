@@ -30,9 +30,10 @@ public class ProductionController {
     @CrossOrigin
     public Map<String, List<ProductionDataPoint>> getProductionDataPoints(
             @RequestParam(name = "mcssystemid") int mcsSystemID,
-            @RequestParam(name = "accumulated") boolean accumulated
+            @RequestParam(name = "accumulated") boolean accumulated,
+            @RequestParam(name = "interval") int intervalAsMinutes
     ){
-        return productionService.getProductionDataPoints(mcsSystemID, accumulated);
+        return productionService.getProductionDataPoints(mcsSystemID, accumulated, intervalAsMinutes);
     }
 
     @GetMapping(
@@ -43,9 +44,10 @@ public class ProductionController {
     public Map<String, List<ProductionDataPoint>> getProductionDataPointsWithinTimeSpan(
             @RequestParam(name = "mcssystemid") int mcsSystemID,
             @RequestParam(name = "accumulated") boolean accumulated,
-            @RequestParam(name = "datatimespan") int timeSpanInMinutes
+            @RequestParam(name = "datatimespan") int timeSpanInMinutes,
+            @RequestParam(name = "interval") int intervalAsMinutes
     ){
-        return productionService.getProductionDataPoints(mcsSystemID, accumulated, timeSpanInMinutes);
+        return productionService.getProductionDataPoints(mcsSystemID, accumulated, timeSpanInMinutes, intervalAsMinutes);
     }
 
     @PostMapping("/post")
