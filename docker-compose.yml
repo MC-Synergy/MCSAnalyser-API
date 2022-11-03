@@ -1,0 +1,46 @@
+version: '3.8'
+
+name: MCSAnalyser
+networks:
+  mcsa-net:
+    external: true
+
+services:
+  mcsa-server:
+    container_name: MCSA-API
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://MCSA-Database:3306/mcsaDB'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'password'
+      SPRING_JPA_HIBERNATE_DDL-AUTO: 'update'
+      SPRING_JPA_DATABASE-PLATFORM: 'org.hibernate.dialect.MySQL5InnoDBDialect'
+      SERVER.SERVLET.CONTEXT-PATH: '/api'
+      CREATEDATABASEIFNOTEXISTS: true
+      SERVER_PORT: 8080
+      SERVER_ADDRESS: 0.0.0.0
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: mcsaserver:latest
+    ports:
+      - "18702:8080"
+    depends_on:
+      - mcsa-db
+    networks: 
+      - mcsa-net
+
+  mcsa-db:
+    image: mysql:latest
+    container_name: MCSA-Database
+    environment:
+      MYSQL_DATABASE: 'mcsaDB'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - "18701:3306"
+    volumes:
+      - mcsa-db-volume:/var/lib/mysql
+    networks:
+      - mcsa-net
+
+volumes:
+  mcsa-db-volume:

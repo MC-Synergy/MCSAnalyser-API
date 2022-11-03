@@ -28,7 +28,8 @@ public class ProductionService {
     }
 
     public Map<String, List<ProductionDataPoint>> getProductionDataPoints(int mcsSystemID, boolean accumulated, int timeSpanAsMinutes){
-        LocalDateTime startDate = LocalDateTime.now();
+        //TODO Remove this line in production and make it LocalDateTime.now()
+        LocalDateTime startDate = LocalDateTime.of(2022, 10, 1, 14, 18, 1);
         startDate = startDate.minusMinutes(timeSpanAsMinutes);
         List<ProductionDataPoint> productionDataPoints = productionRepository.findByMcsSystemIDAndTimeSentGreaterThanEqual(mcsSystemID, startDate);
         Map<String, List<ProductionDataPoint>> producedItems = createProducedItemMap(productionDataPoints);

@@ -24,6 +24,12 @@ public class ProductionDataPoint extends DataPoint {
     )
     private String itemName;
 
+    @Column(
+            name = "harvest_interval_as_seconds",
+            nullable = false
+    )
+    private Integer harvestIntervalAsSeconds;
+
     protected ProductionDataPoint() {}
 
     public Integer getAmountProduced() {
@@ -36,5 +42,8 @@ public class ProductionDataPoint extends DataPoint {
 
     public String getItemName() {
         return itemName;
+    }
+    public Integer getHarvestIntervalAsSeconds() {
+        return harvestIntervalAsSeconds;
     }
 }

@@ -3,13 +3,13 @@ package com.mcs.analyser.production;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/production")
-@CrossOrigin
 public class ProductionController {
     private final ProductionService productionService;
 
@@ -19,13 +19,15 @@ public class ProductionController {
     }
 
     @GetMapping("/hello")
+    @CrossOrigin
     public String sayHello(){
-        return "Hello from burger king!";
+        return "Hello from Docker!";
     }
     @GetMapping(
             value = "/get-by-system-id",
             params = {"mcssystemid", "accumulated"}
     )
+    @CrossOrigin
     public Map<String, List<ProductionDataPoint>> getProductionDataPoints(
             @RequestParam(name = "mcssystemid") int mcsSystemID,
             @RequestParam(name = "accumulated") boolean accumulated
@@ -37,6 +39,7 @@ public class ProductionController {
             value = "/get-by-system-id",
             params = {"mcssystemid", "accumulated", "datatimespan"}
     )
+    @CrossOrigin
     public Map<String, List<ProductionDataPoint>> getProductionDataPointsWithinTimeSpan(
             @RequestParam(name = "mcssystemid") int mcsSystemID,
             @RequestParam(name = "accumulated") boolean accumulated,
@@ -46,7 +49,9 @@ public class ProductionController {
     }
 
     @PostMapping("/post")
-    public void postProductionDataPoint(@RequestBody ArrayList<ProductionDataPoint> productionDataPoints){
+    @CrossOrigin(value = "141.224.216.238")
+    public void postProductionDataPoint(@RequestBody ArrayList<ProductionDataPoint> productionDataPoints, HttpServletRequest request){
+        System.out.println(request.getRequestURL());
         for (ProductionDataPoint pdp : productionDataPoints) {
             productionService.saveProductionDataPoint(pdp);
         }
