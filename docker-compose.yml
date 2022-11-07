@@ -6,7 +6,7 @@ networks:
     external: true
 
 services:
-  mcsa-server:
+  mcsa-server-local:
     container_name: MCSA-API
     environment:
       SPRING_DATASOURCE_URL: 'jdbc:mysql://MCSA-Database:3306/mcsaDB'
@@ -23,24 +23,31 @@ services:
       dockerfile: Dockerfile
     image: mcsaserver:latest
     ports:
-      - "18702:8080"
+      - "8081:8080"
     depends_on:
-      - mcsa-db
+      - mcsa-db-local
     networks: 
       - mcsa-net
 
-  mcsa-db:
+  mcsa-db-local:
     image: mysql:latest
     container_name: MCSA-Database
     environment:
       MYSQL_DATABASE: 'mcsaDB'
       MYSQL_ROOT_PASSWORD: 'password'
     ports:
-      - "18701:3306"
+      - "9000:3306"
     volumes:
       - mcsa-db-volume:/var/lib/mysql
     networks:
       - mcsa-net
+  
+  mcsa-server-publish:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: registry.mcsynergy.nl/mcsaserver:latest
+
 
 volumes:
   mcsa-db-volume:
