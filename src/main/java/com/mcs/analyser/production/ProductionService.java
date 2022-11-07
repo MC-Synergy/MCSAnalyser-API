@@ -47,6 +47,9 @@ public class ProductionService {
         return producedItems;
     }
 
+    // NOTE: If given an interval smaller than intervals between pdps in the list/data the return value will be seriously weird.
+    // This is because it might try to calculate the average of an interval without any data within that interval,
+    // which obviously causes some problems.
     private List<ProductionDataPoint> calculateAverages(List<ProductionDataPoint> productionDataPoints, int intervalAsMinutes) {
         if (productionDataPoints.size() < 1 || intervalAsMinutes == 0) {
             return productionDataPoints;
