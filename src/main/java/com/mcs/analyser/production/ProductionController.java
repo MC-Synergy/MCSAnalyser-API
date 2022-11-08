@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/production")
 public class ProductionController {
     private final ProductionService productionService;
@@ -19,7 +20,6 @@ public class ProductionController {
     }
 
     @GetMapping("/hello")
-    @CrossOrigin
     public String sayHello(){
         return "Hello from Docker!";
     }
@@ -27,7 +27,6 @@ public class ProductionController {
             value = "/get-by-system-id",
             params = {"mcssystemid", "accumulated"}
     )
-    @CrossOrigin
     public Map<String, List<ProductionDataPoint>> getProductionDataPoints(
             @RequestParam(name = "mcssystemid") int mcsSystemID,
             @RequestParam(name = "accumulated") boolean accumulated,
@@ -40,7 +39,6 @@ public class ProductionController {
             value = "/get-by-system-id",
             params = {"mcssystemid", "accumulated", "datatimespan"}
     )
-    @CrossOrigin
     public Map<String, List<ProductionDataPoint>> getProductionDataPointsWithinTimeSpan(
             @RequestParam(name = "mcssystemid") int mcsSystemID,
             @RequestParam(name = "accumulated") boolean accumulated,
@@ -51,7 +49,6 @@ public class ProductionController {
     }
 
     @PostMapping("/post")
-    @CrossOrigin(value = "141.224.216.238")
     public void postProductionDataPoint(@RequestBody ArrayList<ProductionDataPoint> productionDataPoints, HttpServletRequest request){
         System.out.println(request.getRequestURL());
         for (ProductionDataPoint pdp : productionDataPoints) {
