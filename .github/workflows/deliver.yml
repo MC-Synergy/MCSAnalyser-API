@@ -1,0 +1,29 @@
+---
+name: Deliver
+
+on: 
+  push:
+    branches: ["main"]
+  pull_request_review:
+    types: [submitted]
+  workflow_dispatch:
+
+jobs:
+  Docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Login to registry
+        run: >
+          echo ${{ secrets.REGISTRY_PASSWORD }}
+          | sudo docker login registry.mcsynergy.nl
+          -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+      
+      - name: Build image
+        run: >
+          sudo docker build . --file Dockerfile
+          --tag registry.mcsynergy.nl/mcsaserver:latest
+      
+      - name: Push to registry
+        run: sudo docker push registry.mcsynergy.nl/mcsaserver:latest
