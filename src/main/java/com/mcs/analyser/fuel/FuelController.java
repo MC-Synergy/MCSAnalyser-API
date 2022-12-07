@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/fuel")
 public class FuelController {
     private final FuelService fuelService;
