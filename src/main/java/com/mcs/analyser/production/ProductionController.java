@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/production")
 public class ProductionController {
     private final ProductionService productionService;
