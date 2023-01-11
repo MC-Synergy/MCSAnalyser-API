@@ -33,6 +33,9 @@ public class ProductionService {
 
     public Map<String, List<ProductionDataPoint>> getProductionDataPoints(int mcsSystemID, boolean accumulated, int timeSpanAsMinutes, int intervalAsMinutes){
         LocalDateTime startDate = LocalDateTime.now();
+        //for better data
+        startDate = LocalDateTime.of(2023, 1, 4, 18, 0, 0);
+
         startDate = startDate.minusMinutes(timeSpanAsMinutes);
         List<ProductionDataPoint> productionDataPoints = productionRepository.findByMcsSystemIDAndTimeSentGreaterThanEqual(mcsSystemID, startDate);
         Map<String, List<ProductionDataPoint>> producedItems = sortProducedItemMap(createProducedItemMap(productionDataPoints));
