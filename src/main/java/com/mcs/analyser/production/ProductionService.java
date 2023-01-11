@@ -18,8 +18,9 @@ public class ProductionService {
 
     public Map<String, List<ProductionDataPoint>> getProductionDataPoints(int mcsSystemID, boolean accumulated, int intervalAsMinutes){
         List<ProductionDataPoint> productionDataPoints = productionRepository.findByMcsSystemID(mcsSystemID);
-        Map<String, List<ProductionDataPoint>> producedItems = createProducedItemMap(productionDataPoints);
+        Map<String, List<ProductionDataPoint>> producedItems = sortProducedItemMap(createProducedItemMap(productionDataPoints));
 
+        System.out.println(accumulated);
         if (accumulated) {
             producedItems.replaceAll((key, PDPs) -> accumulateAmountProduced(PDPs));
         }
@@ -27,7 +28,6 @@ public class ProductionService {
             producedItems.replaceAll((key, PDPs) -> calculateAverages(PDPs, intervalAsMinutes));
         }
 
-        producedItems.replaceAll((key, PDPs) -> accumulateAmountProduced(PDPs));
         return producedItems;
     }
 
@@ -35,7 +35,7 @@ public class ProductionService {
         LocalDateTime startDate = LocalDateTime.now();
         startDate = startDate.minusMinutes(timeSpanAsMinutes);
         List<ProductionDataPoint> productionDataPoints = productionRepository.findByMcsSystemIDAndTimeSentGreaterThanEqual(mcsSystemID, startDate);
-        Map<String, List<ProductionDataPoint>> producedItems = createProducedItemMap(productionDataPoints);
+        Map<String, List<ProductionDataPoint>> producedItems = sortProducedItemMap(createProducedItemMap(productionDataPoints));
 
         if (accumulated) {
             producedItems.replaceAll((key, PDPs) -> accumulateAmountProduced(PDPs));
@@ -50,11 +50,10 @@ public class ProductionService {
     // NOTE: If given an interval smaller than intervals between pdps in the list/data the return value will be seriously weird.
     // This is because it might try to calculate the average of an interval without any data within that interval,
     // which obviously causes some problems.
-    private List<ProductionDataPoint> calculateAverages(List<ProductionDataPoint> productionDataPoints, int intervalAsMinutes) {
+    public List<ProductionDataPoint> calculateAverages(List<ProductionDataPoint> productionDataPoints, int intervalAsMinutes) {
         if (productionDataPoints.size() < 1 || intervalAsMinutes == 0) {
             return productionDataPoints;
         }
-        productionDataPoints.sort(Comparator.comparing(DataPoint::getTimeSent));
 
         List<ProductionDataPoint> calculatedList = new ArrayList<>();
         int totalIntervals = 0;
@@ -84,7 +83,7 @@ public class ProductionService {
         }
         return calculatedList;
     }
-    private Map<String, List<ProductionDataPoint>> createProducedItemMap(List<ProductionDataPoint> productionDataPoints) {
+    public Map<String, List<ProductionDataPoint>> createProducedItemMap(List<ProductionDataPoint> productionDataPoints) {
         Map<String, List<ProductionDataPoint>> producedItems = new HashMap<>();
         for (ProductionDataPoint pdp : productionDataPoints) {
             producedItems.computeIfAbsent(pdp.getItemName(), k -> new ArrayList<>()).add(pdp);
@@ -93,13 +92,20 @@ public class ProductionService {
     }
 
 
-    private List<ProductionDataPoint> accumulateAmountProduced(List<ProductionDataPoint> productionDataPoints){
+    public List<ProductionDataPoint> accumulateAmountProduced(List<ProductionDataPoint> productionDataPoints){
         int lastAmountProduced = 0;
         for (ProductionDataPoint pdp : productionDataPoints) {
             pdp.setAmountProduced(pdp.getAmountProduced() + lastAmountProduced);
             lastAmountProduced = pdp.getAmountProduced();
         }
         return productionDataPoints;
+    }
+
+    public Map<String, List<ProductionDataPoint>> sortProducedItemMap(Map<String, List<ProductionDataPoint>> producedItems){
+        for (List<ProductionDataPoint> producedItemPDPs : producedItems.values()) {
+            producedItemPDPs.sort(Comparator.comparing(DataPoint::getTimeSent));
+        }
+        return producedItems;
     }
 
     public void saveProductionDataPoint(ProductionDataPoint productionDataPoint){
