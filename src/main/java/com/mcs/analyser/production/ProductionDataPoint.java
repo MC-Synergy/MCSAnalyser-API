@@ -1,8 +1,10 @@
 package com.mcs.analyser.production;
 
 import com.mcs.analyser.common.DataPoint;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity(name = "product_data_point")
 @SequenceGenerator(
@@ -10,6 +12,7 @@ import javax.persistence.*;
         sequenceName="product_data_point_sequence",
         allocationSize=1
 )
+@EqualsAndHashCode
 public class ProductionDataPoint extends DataPoint {
 
     @Column(
@@ -29,6 +32,13 @@ public class ProductionDataPoint extends DataPoint {
             nullable = false
     )
     private Integer harvestIntervalAsSeconds;
+
+    public ProductionDataPoint(Long id, Integer mcsSystemID, LocalDateTime timeSent, Integer amountProduced, String itemName, Integer harvestIntervalAsSeconds) {
+        super(id, mcsSystemID, timeSent);
+        this.amountProduced = amountProduced;
+        this.itemName = itemName;
+        this.harvestIntervalAsSeconds = harvestIntervalAsSeconds;
+    }
 
     protected ProductionDataPoint() {}
 

@@ -1,5 +1,8 @@
 package com.mcs.analyser.common;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -24,6 +27,14 @@ public class DataPoint {
             nullable = false
     )
     protected LocalDateTime timeSent;
+
+    public DataPoint(Long id, Integer mcsSystemID, LocalDateTime timeSent) {
+        this.id = id;
+        this.mcsSystemID = mcsSystemID;
+        this.timeSent = timeSent;
+    }
+
+    protected DataPoint() {}
 
     public Long getId() {
         return id;
