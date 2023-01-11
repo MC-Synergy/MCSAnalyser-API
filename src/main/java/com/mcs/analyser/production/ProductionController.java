@@ -19,7 +19,7 @@ public class ProductionController {
 
     @GetMapping("/hello")
     public String sayHello(){
-        return "Hello from Docker!";
+        return "Hello from MCS Analyser!";
     }
     @GetMapping(
             value = "/get-by-system-id",
